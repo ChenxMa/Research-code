@@ -1,27 +1,35 @@
 import pandas as pd
 import sys
 import os
-dir_path = "/hpc/data/home/bme/mazhw/group/DICOM/2022/"
+dir_path =  "/hpc/data/home/bme/mazhw/group/DICOM/2022/"
 home_path = "/public/home/mazhw_g/v-machx1/UI_Physio/"
 for root, dirs, files in os.walk(dir_path):
     for name in files:
-        file_path = home_path + root.split('/')[7:]
-        print(file_path)
-        if name[-5:]=="pulse":
-            df = pd.read_table(os.path.join(root,name), delimiter=';',  names=['Time','Data']) #将数据根据;切片成Time与Data
-            for i in range(0,len(df)):
-                df.Data[i] = df.Data[i].split('|')[0][6:] #选择Data列数据，只保留数据部分，并以|为界限除去Trigger
-            print(df.Data)
-            df.Data.to_csv(file_path + "/pulse.csv")
-        if name[-4:]=="resp":
-            df = pd.read_table(os.path.join(root, name), delimiter=';', names=['Time', 'Data'])
-            for i in range(0, len(df)):
-                df.Data[i] = df.Data[i].split('|')[0][6:]
-            print(df.Data)
-            df.Data.to_csv(file_path + "/resp.csv")
-        if name[-4:]=="mmwr":
-            df = pd.read_table(os.path.join(root, name), delimiter=';', names=['Time', 'Data'])
-            for i in range(0, len(df)):
-                df.Data[i] = df.Data[i].split('|')[0][6:]
-            print(df.Data)
-            df.Data.to_csv(file_path + "/mmwr.csv")
+        file_path = home_path + root[len(dir_path):]
+        if name[-9:]=="pulse.dat":
+            if not os.path.exists(file_path):
+                os.makedirs(file_path)
+            df = pd.read_table(os.path.join(root, name), delimiter=',', names=['TimeStamp', 'WaveData', 'Trigger'],
+                               skiprows=[0, 1, 2, 3, 4, 5, 6])
+            print(df)
+            file_name = name.split(".")[0].split("_",2)[2] #抹去UID，保留scan信息
+            csv_name = file_path + "/" +file_name + "_pulse.csv"
+            df.to_csv(csv_name)
+        if name[-8:]=="resp.dat":
+            if not os.path.exists(file_path):
+                os.makedirs(file_path)
+            df = pd.read_table(os.path.join(root, name), delimiter=',', names=['TimeStamp', 'WaveData', 'Trigger'],
+                               skiprows=[0, 1, 2, 3, 4, 5, 6])
+            print(df)
+            file_name = name.split(".")[0].split("_",2)[2]
+            csv_name = file_path + "/" + file_name + "_resp.csv"
+            df.to_csv(csv_name)
+        if name[-8:]=="mmwr.dat":
+            if not os.path.exists(file_path):
+                os.makedirs(file_path)
+            df = pd.read_table(os.path.join(root, name), delimiter=',', names=['TimeStamp', 'WaveData', 'Trigger'],
+                               skiprows=[0, 1, 2, 3, 4, 5, 6])
+            print(df)
+            file_name = name.split(".")[0].split("_",2)[2]
+            csv_name = file_path + "/" + file_name + "_mmwr.csv"
+            df.to_csv(csv_name)
