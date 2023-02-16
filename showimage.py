@@ -1,4 +1,5 @@
-import os, matplotlib, sys
+import os, \
+    matplotlib, sys
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -105,17 +106,17 @@ def _plot(x, mph, mpd, threshold, edge, valley, ax, ind, title, subject_id):
         if no_ax:
             plt.show()
 
-path = "D:/Research/UI_Physio/Oct_2022/"
-image_path = "D:/Research/UI_Physio/image/"
+path = "D:/Research/UI_Physio/Nov_2022/20221105"
+image_path = "D:/Research/UI_Physio/UI_Physio_image/"
 for root, dirs, files in os.walk(path):
     for name in files:
-        if name == "pulse.csv":
-            data = pd.read_csv(os.path.join(root,name), usecols=["Data"])
-            data_P = data.Data
+        if name[-9:] == "pulse.csv":
+            data = pd.read_csv(os.path.join(root,name), usecols=["WaveData"])
+            data_P = data.WaveData
             a_data_P = np.array(data_P)  # 将dataframe格式转为arry格式
             a_data_P = a_data_P.flatten()  # 将二维数组转为一维数组
             xlable = root.split("\\")
-            xlable = xlable[0][-17:]+"_" + xlable[2]+"_"+xlable[3]+ "_P"
+            xlable = xlable[0][-17:] +"_"+ xlable[2]+"_"+xlable[3]+"_"+ name.split(".")[0]
             try:
                 if len(a_data_P)>10000:
                     a_data_P_fir = a_data_P[:(a_data_P.shape[0] // 10000 * 10000)].reshape(-1, 10000)
@@ -129,13 +130,13 @@ for root, dirs, files in os.walk(path):
                     plt.close("all")
             except Exception as e:
                 print(e)
-        if name == "resp.csv":
-            data = pd.read_csv(os.path.join(root, name), usecols=["Data"])
-            data_R = data.Data
+        if name[-8:] == "resp.csv":
+            data = pd.read_csv(os.path.join(root, name), usecols=["WaveData"])
+            data_R = data.WaveData
             a_data_R = np.array(data_R)  # 将dataframe格式转为arry格式
             a_data_R = a_data_R.flatten()  # 将二维数组转为一维数组
             xlable = root.split("\\")
-            xlable = xlable[0][-17:] +"_"+ xlable[2] + "_" + xlable[3]+"_R"
+            xlable = xlable[0][-17:] +"_"+ xlable[2]+"_"+xlable[3]+"_"+ name.split(".")[0]
             try:
                 if len(a_data_R)>10000:
                     a_data_R_fir = a_data_R[:(a_data_R.shape[0] // 10000 * 10000)].reshape(-1, 10000)
@@ -149,13 +150,13 @@ for root, dirs, files in os.walk(path):
                     plt.close("all")
             except Exception as e:
                 print(e)
-        if name == "mmwr.csv":
-            data = pd.read_csv(os.path.join(root, name), usecols=["Data"])
-            data_M = data.Data
+        if name[-8:] == "mmwr.csv":
+            data = pd.read_csv(os.path.join(root, name), usecols=["WaveData"])
+            data_M = data.WaveData
             a_data_M = np.array(data_M)  # 将dataframe格式转为arry格式
             a_data_M = a_data_M.flatten()  # 将二维数组转为一维数组
             xlable = root.split("\\")
-            xlable = xlable[0][-17:] +"_"+ xlable[2]+"_"+xlable[3]+"_M"
+            xlable = xlable[0][-17:] +"_"+ xlable[2]+"_"+xlable[3]+"_"+ name.split(".")[0]
             try:
                 if len(a_data_M)>10000:
                     a_data_M_fir = a_data_M[:(a_data_M.shape[0] // 10000 * 10000)].reshape(-1, 10000)
